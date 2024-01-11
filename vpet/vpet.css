@@ -1,0 +1,61 @@
+body{
+background-color: pink;
+margin: 0;
+padding: 0;
+}
+
+.title{
+    background-color: palevioletred;
+    height: 10vh;
+    width: 100vw;
+}
+
+.main{
+background-image: url("/vpet/material/untitle.png");
+height: 600px;
+width: 1430px;
+background-size: cover;
+}
+
+
+h1{
+height: 20px;
+width: 1415px;
+text-align: center;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+color:white;
+font-size:70px;
+position: fixed;
+top: 0;
+}
+
+
+
+/* 顶部导航栏 */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: palevioletred;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: darkgrey;
+  }
+  .active {
+    background-color: darkgray;
+    color: white;
+  }
