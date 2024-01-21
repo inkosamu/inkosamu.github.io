@@ -1,0 +1,90 @@
+body {
+    background-color:pink;
+  }
+
+
+  /* 轮播图 */
+.wheel{
+  width: 1415px;
+  height:250px;
+  position: relative;
+}
+.wheel-img{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.wheel-left{
+  position: absolute;
+  width: 35px;
+  height: 70px;
+  background-color: whitesmoke;
+  color: black;
+  top: 95px;
+  border-radius: 0 5px 5px 0;
+  text-align: center;
+  line-height: 70px;
+  font-size: 27px;
+}
+.wheel-left:hover{
+  background-color: azure;
+  color: darkgray;
+}
+
+.wheel-right{
+  position: absolute;
+  width: 35px;
+  height: 70px;
+  background-color: whitesmoke;
+  color: black;
+  top: 95px;
+  border-radius: 5px 0 0 5px;
+  text-align: center;
+  line-height: 70px;
+  font-size: 27px;
+  right: 0;
+}
+.wheel-right:hover{
+  background-color: azure;
+  color: darkgray;
+}
+
+
+
+
+
+
+/* 顶部导航栏 */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: palevioletred;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: darkgrey;
+}
+.active {
+  background-color: darkgray;
+  color: white;
+}
+/*导航栏固定，存在未知bug*/
+ul {
+  position: fixed;
+  top:6;
+  width: 100%;
+}
