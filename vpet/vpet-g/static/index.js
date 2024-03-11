@@ -344,7 +344,7 @@ function shareText(score) {
     if (score <= 49) return '诶，手滑了？';
     if (score <= 99) return '您完全不打音游是吗？';
     if (score <= 149) return '你做的好哇！';
-    if (score <= 199) return '小枫鹿被吃掉了！';
+    if (score <= 199) return '萝莉斯被吃掉了！';
     return '椰叶浇浇我QWQ！';
 }
 
