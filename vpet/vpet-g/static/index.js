@@ -175,7 +175,7 @@ function SubmitResults() {
 function gameTime() {
     _gameTimeNum--;
     if (_gameTimeNum <= 0) {
-        GameTimeLayer.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;鹿鹿来咯！';
+        GameTimeLayer.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;恭喜你完成了！';
         gameOver();
         GameLayerBG.className += ' flash';
         createjs.Sound.play("end");
