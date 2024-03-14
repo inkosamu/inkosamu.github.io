@@ -10,7 +10,7 @@ var body, blockSize, GameLayer = [],
     GameLayerBG, touchArea = [],
     GameTimeLayer;
 var transform, transitionDuration;
-
+alert("该页面建议使用移动端打开哦\n嘿嘿^^")
 function init() {
     showWelcomeLayer();
     body = document.getElementById('gameBody') || document.body;
