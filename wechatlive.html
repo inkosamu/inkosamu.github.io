@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业直播</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.19.0.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1890ff; margin: 0; }
+        .header p { color: #666; margin: 5px 0; }
+        .video-container { width: 100%; height: 300px; background: #000; margin: 10px 0; border-radius: 8px; overflow: hidden; position: relative; }
+        .video-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; z-index: 10; }
+        .controls { margin: 20px 0; text-align: center; }
+        .btn { padding: 12px 24px; margin: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: all 0.3s; }
+        .btn-primary { background: #1890ff; color: white; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-danger { background: #ff4d4f; color: white; }
+        .btn-danger:hover { background: #d9363e; }
+        .btn-success { background: #52c41a; color: white; }
+        .btn-success:hover { background: #389e0d; }
+        .btn-share { background: #09bb07; color: white; }
+        .btn-share:hover { background: #078d05; }
+        .live-list { margin: 20px 0; }
+        .live-item { padding: 20px; border: 1px solid #ddd; margin: 15px 0; border-radius: 8px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        #localVideo, #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .status-bar { padding: 15px; background: white; border-radius: 8px; margin: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .status-item { display: flex; justify-content: space-between; margin: 8px 0; }
+        .status-label { color: #666; }
+        .status-value { font-weight: bold; color: #1890ff; }
+        .wework-tips { background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .share-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .share-content { background: white; padding: 30px; border-radius: 12px; text-align: center; max-width: 320px; }
+        .share-steps { text-align: left; margin: 20px 0; }
+        .share-steps li { margin: 10px 0; padding: 8px; background: #f0f0f0; border-radius: 4px; }
+        .copy-success { background: #f6ffed; color: #52c41a; padding: 10px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 企业微信环境提示 -->
+        <div id="weworkTips" class="wework-tips" style="display:none;">
+            <h4>🎯 企业微信环境检测</h4>
+            <p id="envStatus">正在检测企业微信环境...</p>
+        </div>
+
+        <!-- 直播列表页 -->
+        <div id="listPage" class="page active">
+            <div class="header">
+                <h1>📺 企业直播平台</h1>
+                <p>基于企业微信的内部直播解决方案</p>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="createLive()">🎥 发起直播</button>
+                <button class="btn btn-success" onclick="refreshList()">🔄 刷新列表</button>
+                <button class="btn" onclick="showSettings()">⚙️ 设置</button>
+            </div>
+            <div id="liveList" class="live-list">
+                <div class="live-item">
+                    <h3>💡 使用指南</h3>
+                    <p><strong>发起直播：</strong>点击"发起直播"开始推流</p>
+                    <p><strong>分享观看：</strong>通过企业微信一键分享给同事</p>
+                    <p><strong>无需下载：</strong>观众直接点击链接即可观看</p>
+                </div>
+                <div class="live-item">
+                    <h3>📱 支持功能</h3>
+                    <p>✅ 高清视频直播 ✅ 实时音频传输</p>
+                    <p>✅ 企业微信分享 ✅ 多人同时观看</p>
+                    <p>✅ 移动端适配 ✅ 网络自适应</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 直播推流页 -->
+        <div id="pushPage" class="page">
+            <div class="header">
+                <h1>🔴 正在直播</h1>
+            </div>
+            <div class="video-container">
+                <video id="localVideo" autoplay muted></video>
+                <div class="video-overlay" id="videoOverlay">
+                    <h3>📹 点击开始直播</h3>
+                    <p>将会请求摄像头和麦克风权限</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="startBtn" class="btn btn-primary" onclick="startLive()">▶️ 开始直播</button>
+                <button id="stopBtn" class="btn btn-danger" onclick="stopLive()" style="display:none">⏹️ 停止直播</button>
+                <button id="shareBtn" class="btn btn-share" onclick="shareLive()" style="display:none">📤 分享给同事</button>
+                <button class="btn" onclick="showPage('listPage')">🔙 返回列表</button>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">直播间ID:</span>
+                    <span class="status-value" id="channelName">未分配</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">直播状态:</span>
+                    <span class="status-value" id="liveStatusHost">准备中</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">观看人数:</span>
+                    <span class="status-value" id="audienceCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 直播观看页 -->
+        <div id="watchPage" class="page">
+            <div class="header">
+                <h1>👀 观看直播</h1>
+            </div>
+            <div class="video-container">
+                <video id="remoteVideo" autoplay controls></video>
+                <div class="video-overlay" id="watchOverlay">
+                    <h3>📺 等待连接直播</h3>
+                    <p>点击下方按钮加入观看</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="joinBtn" class="btn btn-primary" onclick="joinLive()">👁️ 加入观看</button>
+                <button id="leaveBtn" class="btn btn-danger" onclick="leaveLive()" style="display:none">🚪 退出观看</button>
+                <button class="btn btn-share" onclick="shareToColleagues()">📤 分享给其他同事</button>
+                <button class="btn" onclick="showPage('listPage')">🔙 返回列表</button>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">直播间:</span>
+                    <span class="status-value" id="watchChannelName">未连接</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">连接状态:</span>
+                    <span class="status-value" id="liveStatus">等待连接...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分享引导弹窗 -->
+        <div class="share-modal" id="shareModal">
+            <div class="share-content">
+                <h3>📱 企业微信分享</h3>
+                <div id="shareResult" class="copy-success" style="display:none;">
+                    ✅ 链接已复制到剪贴板
+                </div>
+                <div class="share-steps">
+                    <h4>📋 分享步骤：</h4>
+                    <ol>
+                        <li>点击右上角 <strong>···</strong> 菜单</li>
+                        <li>选择 <strong>发送给同事</strong></li>
+                        <li>选择同事或群组发送</li>
+                        <li>同事点击链接即可观看</li>
+                    </ol>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-share" onclick="copyShareLink()">📋 复制链接</button>
+                    <button class="btn" onclick="closeShareModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置信息 - 请替换为您的实际配置
+        const AGORA_CONFIG = {
+            appId: "e2d14f62ccd74c47a053b74175fa912b", // 您的声网AppID
+            token: null // 简化版本不使用token
+        };
+
+        // 企业微信配置 - 请替换为您的实际配置
+        const WEWORK_CONFIG = {
+            corpId: "ww619439206ed8f40e",        // 替换为你的企业ID
+            agentId: "1000002"       // 替换为你的应用ID
+        };
+
+        // 全局变量
+        let agoraClient = null;
+        let localTracks = [];
+        let currentChannel = '';
+        let isHost = false;
+        let isWeworkEnv = false;
+        let shareUrl = '';
+
+        // 应用主类
+        class EnterpriseWeworkLive {
+            constructor() {
+                this.initApp();
+            }
+
+            async initApp() {
+                console.log('🚀 初始化企业直播应用...');
+                
+                // 检测运行环境
+                this.detectEnvironment();
+                
+                // 初始化声网客户端
+                await this.initAgora();
+                
+                // 初始化企业微信
+                if (isWeworkEnv) {
+                    await this.initWework();
+                }
+                
+                // 检查URL参数（支持分享链接直接观看）
+                this.checkUrlParams();
+            }
+
+            detectEnvironment() {
+                const ua = navigator.userAgent;
+                isWeworkEnv = ua.includes('wxwork') || ua.includes('micromessenger');
+                
+                const tipsDiv = document.getElementById('weworkTips');
+                const statusDiv = document.getElementById('envStatus');
+                
+                if (isWeworkEnv) {
+                    tipsDiv.style.display = 'block';
+                    statusDiv.innerHTML = '✅ 检测到企业微信环境，支持一键分享功能';
+                    statusDiv.style.color = '#52c41a';
+                } else {
+                    tipsDiv.style.display = 'block';
+                    statusDiv.innerHTML = '⚠️ 非企业微信环境，建议在企业微信中打开以获得最佳体验';
+                    statusDiv.style.color = '#faad14';
+                }
+            }
+
+            async initAgora() {
+                try {
+                    agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+                    
+                    // 监听远程用户事件
+                    agoraClient.on("user-published", this.handleUserPublished.bind(this));
+                    agoraClient.on("user-unpublished", this.handleUserUnpublished.bind(this));
+                    agoraClient.on("user-joined", this.handleUserJoined.bind(this));
+                    agoraClient.on("user-left", this.handleUserLeft.bind(this));
+                    
+                    console.log('✅ 声网客户端初始化成功');
+                } catch (error) {
+                    console.error('❌ 声网客户端初始化失败:', error);
+                }
+            }
+
+            async initWework() {
+                try {
+                    // 简化版企业微信配置（生产环境需要后端签名）
+                    if (typeof wx !== 'undefined') {
+                        wx.config({
+                            beta: true,
+                            debug: false, // 生产环境设为false
+                            appId: WEWORK_CONFIG.corpId,
+                            timestamp: Math.floor(Date.now() / 1000),
+                            nonceStr: Math.random().toString(36).substr(2),
+                            signature: 'temp_signature', // 实际需要后端计算
+                            jsApiList: [
+                                'updateAppMessageShareData',
+                                'updateTimelineShareData',
+                                'onMenuShareAppMessage',
+                                'chooseImage',
+                                'previewImage'
+                            ]
+                        });
+
+                        wx.ready(() => {
+                            console.log('✅ 企业微信JS-SDK初始化成功');
+                            this.setupWeworkShare();
+                        });
+
+                        wx.error((res) => {
+                            console.log('⚠️ 企业微信JS-SDK初始化警告:', res);
+                            // 即使失败也不影响基本功能
+                        });
+                    }
+                } catch (error) {
+                    console.log('⚠️ 企业微信集成失败，将使用基础分享功能:', error);
+                }
+            }
+
+            checkUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const channel = urlParams.get('channel');
+                const mode = urlParams.get('mode');
+
+                if (channel && mode === 'watch') {
+                    console.log('🔗 检测到分享链接，自动进入观看模式');
+                    this.watchLive(channel);
+                }
+            }
+
+            // 创建直播间
+            async createLive() {
+                const channelName = 'live_' + Date.now();
+                currentChannel = channelName;
+                isHost = true;
+                
+                document.getElementById('channelName').textContent = channelName;
+                document.getElementById('liveStatusHost').textContent = '准备中';
+                showPage('pushPage');
+                
+                console.log('📡 创建直播间:', channelName);
+            }
+
+            // 开始直播
+            async startLive() {
+                try {
+                    console.log('🎬 开始直播...');
+                    
+                    // 设置为主播角色
+                    await agoraClient.setClientRole("host");
+                    
+                    // 创建本地音视频轨道
+                    localTracks = await AgoraRTC.createMicrophoneAndCameraTracks({
+                        videoConfig: {
+                            width: 640,
+                            height: 480,
+                            frameRate: 15,
+                            bitrateMin: 300,
+                            bitrateMax: 1000
+                        },
+                        audioConfig: {
+                            sampleRate: 48000,
+                            stereo: true,
+                            bitrate: 128
+                        }
+                    });
+                    
+                    const [audioTrack, videoTrack] = localTracks;
+                    
+                    // 播放本地视频
+                    videoTrack.play('localVideo');
+                    
+                    // 隐藏覆盖层
+                    document.getElementById('videoOverlay').style.display = 'none';
+                    
+                    // 加入频道
+                    await agoraClient.join(AGORA_CONFIG.appId, currentChannel, AGORA_CONFIG.token);
+                    
+                    // 发布本地流
+                    await agoraClient.publish(localTracks);
+                    
+                    // 更新UI
+                    document.getElementById('startBtn').style.display = 'none';
+                    document.getElementById('stopBtn').style.display = 'inline-block';
+                    document.getElementById('shareBtn').style.display = 'inline-block';
+                    document.getElementById('liveStatusHost').textContent = '直播中';
+                    
+                    // 生成分享链接
+                    shareUrl = `${window.location.origin}${window.location.pathname}?channel=${currentChannel}&mode=watch`;
+                    
+                    console.log('✅ 直播开始成功，分享链接:', shareUrl);
+                    
+                } catch (error) {
+                    console.error('❌ 开始直播失败:', error);
+                    alert('开始直播失败: ' + error.message + '\n\n请检查:\n1. 网络连接\n2. 摄像头和麦克风权限\n3. 声网配置');
+                    document.getElementById('videoOverlay').style.display = 'block';
+                }
+            }
+
+            // 停止直播
+            async stopLive() {
+                try {
+                    // 停止本地轨道
+                    localTracks.forEach(track => {
+                        track.stop();
+                        track.close();
+                    });
+                    localTracks = [];
+                    
+                    // 离开频道
+                    await agoraClient.leave();
+                    
+                    // 更新UI
+                    document.getElementById('startBtn').style.display = 'inline-block';
+                    document.getElementById('stopBtn').style.display = 'none';
+                    document.getElementById('shareBtn').style.display = 'none';
+                    document.getElementById('liveStatusHost').textContent = '直播已结束';
+                    document.getElementById('videoOverlay').style.display = 'block';
+                    
+                    console.log('⏹️ 直播停止成功');
+                    
+                } catch (error) {
+                    console.error('❌ 停止直播失败:', error);
+                }
+            }
+
+            // 观看直播
+            async watchLive(channelName = null) {
+                if (!channelName) {
+                    channelName = prompt('请输入直播间ID:');
+                    if (!channelName) return;
+                }
+                
+                currentChannel = channelName;
+                isHost = false;
+                shareUrl = `${window.location.origin}${window.location.pathname}?channel=${currentChannel}&mode=watch`;
+                
+                document.getElementById('watchChannelName').textContent = channelName;
+                showPage('watchPage');
+                
+                console.log('👀 准备观看直播:', channelName);
+            }
+
+            // 加入观看
+            async joinLive() {
+                try {
+                    console.log('🔗 连接直播间...');
+                    
+                    // 设置为观众角色
+                    await agoraClient.setClientRole("audience");
+                    
+                    // 加入频道
+                    await agoraClient.join(AGORA_CONFIG.appId, currentChannel, AGORA_CONFIG.token);
+                    
+                    // 更新UI
+                    document.getElementById('joinBtn').style.display = 'none';
+                    document.getElementById('leaveBtn').style.display = 'inline-block';
+                    document.getElementById('liveStatus').textContent = '已连接，等待主播...';
+                    
+                    console.log('✅ 加入直播成功');
+                    
+                } catch (error) {
+                    console.error('❌ 加入直播失败:', error);
+                    alert('加入直播失败: ' + error.message);
+                }
+            }
+
+            // 退出观看
+            async leaveLive() {
+                try {
+                    await agoraClient.leave();
+                    
+                    // 更新UI
+                    document.getElementById('joinBtn').style.display = 'inline-block';
+                    document.getElementById('leaveBtn').style.display = 'none';
+                    document.getElementById('liveStatus').textContent = '已断开连接';
+                    document.getElementById('watchOverlay').style.display = 'block';
+                    
+                    // 清空视频
+                    document.getElementById('remoteVideo').srcObject = null;
+                    
+                    console.log('🚪 退出观看成功');
+                    
+                } catch (error) {
+                    console.error('❌ 退出观看失败:', error);
+                }
+            }
+
+            // 分享直播
+            shareLive() {
+                console.log('📤 分享直播:', shareUrl);
+                this.showShareModal();
+                this.copyToClipboard(shareUrl);
+            }
+
+            // 分享给同事
+            shareToColleagues() {
+                console.log('📤 分享给同事:', shareUrl);
+                this.showShareModal();
+                this.copyToClipboard(shareUrl);
+            }
+
+            // 显示分享弹窗
+            showShareModal() {
+                document.getElementById('shareModal').style.display = 'flex';
+                
+                // 如果在企业微信环境中，设置分享信息
+                if (isWeworkEnv && typeof wx !== 'undefined') {
+                    this.setupWeworkShare();
+                }
+            }
+
+            // 关闭分享弹窗
+            closeShareModal() {
+                document.getElementById('shareModal').style.display = 'none';
+            }
+
+            // 复制分享链接
+            copyShareLink() {
+                this.copyToClipboard(shareUrl);
+                document.getElementById('shareResult').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('shareResult').style.display = 'none';
+                }, 3000);
+            }
+
+            // 设置企业微信分享
+            setupWeworkShare() {
+                if (typeof wx !== 'undefined') {
+                    const title = isHost ? '我正在企业直播，快来观看！' : '精彩企业直播正在进行中';
+                    const desc = `直播间: ${currentChannel}\n点击立即观看`;
+                    
+                    wx.updateAppMessageShareData({
+                        title: title,
+                        desc: desc,
+                        link: shareUrl,
+                        imgUrl: window.location.origin + '/favicon.ico',
+                        success: () => {
+                            console.log('✅ 企业微信分享配置成功');
+                        },
+                        fail: (res) => {
+                            console.log('⚠️ 企业微信分享配置失败:', res);
+                        }
+                    });
+                }
+            }
+
+            // 复制到剪贴板
+            copyToClipboard(text) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        console.log('📋 链接已复制到剪贴板');
+                    });
+                } else {
+                    // 降级方案
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    console.log('📋 链接已复制到剪贴板（降级方案）');
+                }
+            }
+
+            // 处理远程用户发布
+            async handleUserPublished(user, mediaType) {
+                console.log('👤 远程用户发布:', user.uid, mediaType);
+                await agoraClient.subscribe(user, mediaType);
+                
+                if (mediaType === 'video') {
+                    const remoteVideoTrack = user.videoTrack;
+                    remoteVideoTrack.play('remoteVideo');
+                    document.getElementById('liveStatus').textContent = '正在观看直播';
+                    document.getElementById('watchOverlay').style.display = 'none';
+                }
+                
+                if (mediaType === 'audio') {
+                    const remoteAudioTrack = user.audioTrack;
+                    remoteAudioTrack.play();
+                }
+            }
+
+            // 处理远程用户取消发布
+            handleUserUnpublished(user, mediaType) {
+                console.log('👤 远程用户取消发布:', user.uid, mediaType);
+                if (mediaType === 'video') {
+                    document.getElementById('remoteVideo').srcObject = null;
+                    document.getElementById('liveStatus').textContent = '主播已离开';
+                    document.getElementById('watchOverlay').style.display = 'block';
+                }
+            }
+
+            // 处理用户加入
+            handleUserJoined(user) {
+                console.log('👤 用户加入:', user.uid);
+                if (isHost) {
+                    this.updateAudienceCount();
+                }
+            }
+
+            // 处理用户离开
+            handleUserLeft(user) {
+                console.log('👤 用户离开:', user.uid);
+                if (isHost) {
+                    this.updateAudienceCount();
+                }
+            }
+
+            // 更新观众数量
+            updateAudienceCount() {
+                if (agoraClient && agoraClient.remoteUsers) {
+                    const count = agoraClient.remoteUsers.length;
+                    document.getElementById('audienceCount').textContent = count;
+                }
+            }
+        }
+
+        // 页面切换函数
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 全局函数（供HTML调用）
+        let app;
+        
+        window.onload = function() {
+            app = new EnterpriseWeworkLive();
+        };
+
+        // 导出全局函数
+        function createLive() { app.createLive(); }
+        function startLive() { app.startLive(); }
+        function stopLive() { app.stopLive(); }
+        function joinLive() { app.joinLive(); }
+        function leaveLive() { app.leaveLive(); }
+        function shareLive() { app.shareLive(); }
+        function shareToColleagues() { app.shareToColleagues(); }
+        function copyShareLink() { app.copyShareLink(); }
+        function closeShareModal() { app.closeShareModal(); }
+
+        function refreshList() {
+            alert('功能提示：\n\n在实际应用中，这里可以从后端API获取：\n• 正在进行的直播列表\n• 历史直播回放\n• 预约直播安排');
+        }
+
+        function showSettings() {
+            alert('设置功能：\n\n可配置项目：\n• 视频质量设置\n• 音频质量设置\n• 企业微信集成配置\n• 通知偏好设置');
+        }
+    </script>
+</body>
+</html>
