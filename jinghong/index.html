@@ -1,0 +1,573 @@
+<!DOCTYPE html>  
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深圳市晶虹创新科技有限公司</title>
+    <!-- favicon及logo -->
+    <link rel="icon" type="image/x-icon" href="./static/logo_32x32.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="logo-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo-16x16.png">
+    <meta name="description" content="深圳市晶虹创新科技有限公司，专注于智能穿戴、物联网及硬件方案整体开发，提供高品质智能终端及一体化定制解决方案。">
+    <meta name="keywords" content="晶虹创新,智能穿戴,物联网,硬件方案,IoT,主板开发,智能终端,深圳科技公司">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #187fff;
+            --accent-blue: #0e57b4;
+            --light-blue: #f7faff;
+            --dark: #122042;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            color: #222;
+            background: var(--light-blue);
+        }
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--main-blue);
+            color: #fff;
+            box-shadow: 0 2px 20px rgba(24,127,255,0.12);
+            z-index: 1000;
+            padding: 1.2rem 0;
+            transition: background 0.3s;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo-image {
+            height: 68px;
+            width: 68px;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            letter-spacing: 4px;
+            text-decoration: none;
+        }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.12rem;
+            font-weight: 400;
+            padding: 0.6rem 1.2rem;
+            border-radius: 24px;
+            transition: background 0.3s, color 0.3s;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.16);
+            color: #e3eeff;
+        }
+        .lang-switch {
+            background: #fff;
+            color: var(--main-blue);
+            padding: 0.7rem 1.4rem;
+            border-radius: 22px;
+            border: none;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 400;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+            margin-left: 1.5rem;
+        }
+        .lang-switch:hover {
+            background: #eaf2ff;
+            color: var(--accent-blue);
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            background: var(--main-blue);
+            color: #fff;
+            height: 68vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 130px;
+            position: relative;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 8px 24px rgba(24,127,255,0.18);
+        }
+        .hero-subtitle {
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: #e7f0ff;
+            letter-spacing: 2px;
+            margin-bottom: 2.4rem;
+        }
+        .hero-cta {
+            background: #fff;
+            color: var(--main-blue);
+            font-size: 1.14rem;
+            padding: 1rem 2.7rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 600;
+            transition: all .26s;
+            border: none;
+            box-shadow: 0 2px 20px rgba(24,127,255,0.10);
+        }
+        .hero-cta:hover {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        /* Section 标题 */
+        .section {
+            padding: 6rem 2rem 3rem 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 2.8rem;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            color: var(--main-blue);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        /* 关于我们 */
+        .about-content {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(24,127,255,0.04);
+            padding: 3rem 2.5rem 2rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2.8rem;
+            margin-bottom: 3rem;
+        }
+        .about-image {
+            width: 260px;
+            height: 260px;
+            border-radius: 18px;
+            background: linear-gradient(130deg, #e5f1ff 60%, #f8fbff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--main-blue);
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #d5e8ff66;
+        }
+        .about-text {
+            flex: 1;
+            color: #555;
+            font-size: 1.15rem;
+            line-height: 2;
+        }
+        .company-info {
+            margin-top: 2rem;
+            display: flex;
+            gap: 3rem;
+        }
+        .info-item {
+            font-size: 1.06rem;
+            color: #466cb0;
+            line-height: 1.7;
+        }
+        .info-label {
+            font-weight: 700;
+            color: var(--main-blue);
+            margin-bottom: .3rem;
+        }
+        .info-content {
+            color: #222;
+            font-size: 1.02rem;
+        }
+
+        /* 项目介绍区块（新加） */
+        .project-flex {
+            display: flex;
+            align-items: flex-start;
+            gap: 64px;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+        .project-text {
+            flex:1 1 520px; min-width:300px; max-width:600px;
+        }
+        .project-title {
+            font-size:2.5rem;
+            font-weight:700;
+            color:#222;
+            margin-bottom:1.3rem;
+            letter-spacing:1px;
+        }
+        .project-subtitle {
+            font-size:1.22rem;
+            color:#187fff;
+            font-weight:600;
+            margin-bottom:1.7rem;
+            letter-spacing:1px;
+        }
+        .project-text ul {
+            font-size:1.06rem;
+            line-height:2.1;
+            color:#444;
+            margin-bottom:1.5rem;
+            list-style:none;
+            padding:0;
+        }
+        .project-text ul li { margin-bottom: 12px; }
+        .project-scenes {
+            font-size:1.03rem;
+            color:#666;
+        }
+        .project-scenes b { color:#0e57b4; }
+        .project-images {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 24px;
+            min-width:500px;
+            max-width:350px;
+            flex:1 1 260px;
+            align-self: flex-start;
+        }
+        .project-images img {
+            width: 100%;
+            max-width: 160px;
+            object-fit: contain;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px #eaf3ff;
+            background: #fff;
+            justify-self: center;
+        }
+
+        /* AC792N 单图片样式 */
+        .project-single-image {
+            flex: 1 1 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 400px;
+            max-width: 600px;
+        }
+        .project-single-image img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(24,127,255,0.15);
+            background: #fff;
+            padding: 20px;
+        }
+
+        /* 产品展示 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 0 auto 2rem auto;
+            max-width: 1100px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 14px rgba(24,127,255,0.07);
+            text-align: center;
+            padding: 2.2rem 1.5rem 2.5rem 1.5rem;
+            transition: box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 340px;
+        }
+        .product-card:hover {
+            box-shadow: 0 8px 32px rgba(24,127,255,0.18);
+            transform: translateY(-8px) scale(1.03);
+        }
+        .product-img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 1.1rem;
+            background: #f0f7ff;
+            border-radius: 16px;
+            border: 1px solid #e3edff;
+        }
+        .product-title {
+            color: var(--main-blue);
+            font-size: 1.28rem;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 600;
+            margin-bottom: .7rem;
+            margin-top: 0.3rem;
+        }
+        .product-desc {
+            color: #52627b;
+            font-size: 1.02rem;
+            line-height: 1.7;
+            margin-bottom: 1.1rem;
+        }
+        .product-link {
+            display: inline-block;
+            background: var(--main-blue);
+            color: #fff;
+            padding: 0.65rem 1.4rem;
+            border-radius: 28px;
+            text-decoration: none;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.25s;
+        }
+        .product-link:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--accent-blue);
+            color: #fff;
+            padding: 3.2rem 0 1.2rem 0;
+            margin-top: 4rem;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .footer-title {
+            font-size: 1.3rem;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .footer-info {
+            font-size: 1rem;
+            color: #c7e1ff;
+            line-height: 2.1;
+            margin-bottom: 0.7rem;
+        }
+        .footer-copy {
+            color: #eaf4ff;
+            font-size: .96rem;
+            margin-top: 0.8rem;
+        }
+        @media (max-width: 900px) {
+            .nav-container { padding: 0 1.2rem; }
+            .about-content { flex-direction: column; gap: 1.7rem; padding: 2rem 1rem; }
+            .company-info { flex-direction: column; gap: 1.2rem;}
+            .section { padding: 4rem 1rem 2.2rem 1rem; }
+            .project-flex { flex-direction: column; gap: 32px;}
+            .project-images { margin:auto; }
+            .project-single-image { min-width: 300px; max-width: 100%; }
+            .project-single-image img { max-width: 100%; }
+        }
+        @media (max-width: 600px) {
+            .hero-title { font-size: 2.1rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .section-title { font-size: 1.55rem;}
+            .product-title { font-size: 1.08rem;}
+            .products-grid { gap: 1.1rem;}
+            .project-title { font-size: 1.35rem;}
+            .project-subtitle { font-size: 1rem;}
+            .project-images { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="./static/logo.png" alt="晶虹创新Logo" class="logo-image">
+                <a href="#" class="logo">晶虹创新科技</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">首页</a></li>
+                <li><a href="#about" class="nav-link">关于我们</a></li>
+                <li><a href="#ac79" class="nav-link">项目介绍</a></li>
+                <li><a href="#products" class="nav-link">产品方案</a></li>
+                <li><a href="#contact" class="nav-link">联系我们</a></li>
+            </ul>
+            <button class="lang-switch" onclick="toggleLanguage()">中/EN</button>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero-section" id="home">
+        <h1 class="hero-title">智联万物 · 创新引领未来</h1>
+        <div class="hero-subtitle">
+            深圳市晶虹创新科技有限公司，专注智能穿戴与硬件方案整体开发<br>
+            赋能物联网终端，助力行业数字化升级
+        </div>
+        <a href="#products" class="hero-cta">了解我们的产品</a>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="section">
+        <h2 class="section-title">关于我们</h2>
+        <div class="about-content">
+            <div class="about-image">
+                智能 · 创新 · 可靠
+            </div>
+            <div class="about-text">
+                深圳市晶虹创新科技有限公司是一家专注于智能穿戴、物联网和智能硬件整体方案开发的创新型科技企业。我们拥有自研服务器及APP平台，提供从主板设计、硬件生产到软件系统和数据平台一体化的解决方案。<br>
+                <br>
+                公司始终以"科技赋能，智联未来"为核心理念，服务于全球智能终端客户，致力于推动产业智能化升级。
+                <div class="company-info">
+                    <div class="info-item">
+                        <span class="info-label">成立时间：</span>
+                        <span class="info-content">2017年</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">公司地址：</span>
+                        <span class="info-content">深圳市</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AC791N项目介绍区块 START -->
+    <section id="ac79" class="section">
+        <div class="project-flex">
+            <!-- 左侧文本部分 -->
+            <div class="project-text">
+            <div class="project-title">杰理AC791N项目介绍</div>
+            <div class="project-subtitle">杰理AC791N SoC 芯片支持以下特性</div>
+            <ul>
+                <li>· WI-FI+经典蓝牙2.1+蓝牙BLE5.0三模共存</li>
+                <li>· 轻量级的AI神经网络</li>
+                <li>· 主频高达320MHz的双核浮点DSP处理器，片上集成了共578K字节SRAM，部分封装支持2/8M字节SDRAM</li>
+                <li>· 支持DVP/BT656图像传感器，最大支持720P分辨率</li>
+                <li>· 支持ADC、DAC、LINEIN、IIS、PDM、SPDIF音频接口，多种音效处理，双麦克风打断唤醒</li>
+                <li>· 支持RGB888(8bit)/RGB666(6bit)等多种推屏接口，可达320*240@30fps</li>
+            </ul>
+            <div class="project-scenes">
+                <b>应用场景：</b>语音打断唤醒，低功耗人脸检测
+            </div>
+            </div>
+            <!-- 右侧单张大图 -->
+            <div class="project-single-image">
+              <img src="./static/image1.png" alt="AC791N应用产品展示">
+            </div>
+        </div>
+    </section>
+    <!-- AC791N项目介绍区块 END -->
+
+    <!-- AC792N项目介绍区块 START -->
+    <section id="ac792" class="section">
+      <div class="project-flex">
+        <!-- 左侧文本部分 -->
+        <div class="project-text">
+          <div class="project-title">杰理AC792N项目介绍</div>
+          <div class="project-subtitle">杰理AC792N SoC 芯片支持以下特性</div>
+          <ul>
+            <li>· WiFi 802.11b/g/n</li>
+            <li>· 蓝牙双模 （支持蓝牙EDR、蓝牙BLE5.2）</li>
+            <li>· 主频高达320MHz的双核浮点DSP处理器，片上集成了共578K字节SRAM，部分封装支持2/8M字节SDRAM</li>
+            <li>· 支持DVP/BT656图像传感器，最大支持720P分辨率</li>
+            <li>· 支持ADC、DAC、LINEIN、IIS、PDM、SPDIF音频接口，多种音效处理，双麦克风打断唤醒</li>
+            <li>· 支持RGB888(8bit)/RGB666(6bit)等多种推屏接口，可达320*240@30fps</li>
+          </ul>
+          <div class="project-scenes">
+            <b>应用场景：</b>AI对话类、儿童绘本故事机、点读笔/扫描笔/翻译笔、WiFi蓝牙智能音响、WiFi摄像头玩具、可录像拍照宠物自动喂养器
+          </div>
+        </div>
+        <!-- 右侧单张大图 -->
+        <div class="project-single-image">
+          <img src="./static/image2.png" alt="AC792N应用产品展示">
+        </div>
+      </div>
+    </section>
+    <!-- AC792N项目介绍区块 END -->
+
+    <!-- 联系我们&footer -->
+    <section id="contact" class="section" style="padding-bottom:0;">
+        <h2 class="section-title">联系我们</h2>
+        <div class="about-content" style="margin-bottom:0;">
+            <div class="about-image" style="background: linear-gradient(130deg, #cde6ff 60%, #f8fbff 100%); color:#187fff;">
+                欢迎合作
+            </div>
+            <div class="about-text">
+                <div class="company-info" style="margin-top:1rem;">
+                    <div class="info-item"><span class="info-label">联系电话：</span> <span class="info-content"></span></div>
+                    <div class="info-item"><span class="info-label">企业邮箱：</span> <span class="info-content"></span></div>
+                    <div class="info-item"><span class="info-label">公司官网：</span> <span class="info-content">www..com</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-title">深圳市晶虹创新科技有限公司</div>
+            <div class="footer-info">
+                地址：深圳市<br>
+                电话&nbsp;&nbsp;|&nbsp;&nbsp;邮箱：<br>
+                Copyright &copy; 2025 深圳市晶虹创新科技有限公司 保留所有权利
+            </div>
+            <div class="footer-copy">科技赋能 · 创新引领 · 诚信服务</div>
+        </div>
+    </footer>
+
+    <script>
+        // 语言切换基础实现
+        let currentLang = 'zh';
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            alert('国际化内容开发中');
+        }
+        // 导航滚动吸顶颜色过渡
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 80) {
+                navbar.style.background = "#0e57b4";
+            } else {
+                navbar.style.background = "#187fff";
+            }
+        });
+        // 平滑滚动
+        document.querySelectorAll('a.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href').startsWith("#")){
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if(target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                }
+            });
+        });
+    </script>
+</body>
+</html>
