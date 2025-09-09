@@ -24,6 +24,7 @@
             color: #222;
             background: var(--light-blue);
         }
+        
         /* 导航栏 */
         .navbar {
             position: fixed;
@@ -43,6 +44,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 3rem;
+            position: relative;
         }
         .logo-container {
             display: flex;
@@ -96,6 +98,67 @@
         .lang-switch:hover {
             background: #eaf2ff;
             color: var(--accent-blue);
+        }
+
+        /* 汉堡菜单样式 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+            gap: 4px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* 移动端菜单 */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100vh;
+            background: #000e7b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: left 0.3s ease-in-out;
+            z-index: 999;
+        }
+        .mobile-menu.active {
+            left: 0;
+        }
+        .mobile-menu .nav-link {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            padding: 1rem 2rem;
+        }
+        .mobile-lang-switch {
+            background: #fff;
+            color: var(--main-blue);
+            padding: 1rem 2rem;
+            border-radius: 22px;
+            border: none;
+            font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', serif;
+            font-weight: 400;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 2rem;
         }
 
         /* Hero Banner */
@@ -287,6 +350,7 @@
             box-shadow: 0 8px 32px rgba(24,127,255,0.15);
             background: #fff;
             padding: 20px;
+            cursor: pointer;
         }
 
         /* 产品展示 */
@@ -382,25 +446,277 @@
             font-size: .96rem;
             margin-top: 0.8rem;
         }
-        @media (max-width: 900px) {
-            .nav-container { padding: 0 1.2rem; }
-            .about-content { flex-direction: column; gap: 1.7rem; padding: 2rem 1rem; }
-            .company-info { flex-direction: column; gap: 1.2rem;}
-            .section { padding: 4rem 1rem 2.2rem 1rem; }
-            .project-flex { flex-direction: column; gap: 32px;}
-            .project-images { margin:auto; }
-            .project-single-image { min-width: 300px; max-width: 100%; }
-            .project-single-image img { max-width: 100%; }
+
+        /* 移动端优化 - 平板端 */
+        @media (max-width: 1024px) {
+            .nav-container { 
+                padding: 0 2rem; 
+            }
+            .logo {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            .logo-image {
+                height: 56px;
+                width: 56px;
+            }
+            .project-flex { 
+                gap: 40px; 
+            }
+            .project-single-image { 
+                min-width: 350px; 
+            }
         }
+
+        /* 移动端优化 - 大屏手机 */
+        @media (max-width: 900px) {
+            .nav-container { 
+                padding: 0 1.5rem; 
+            }
+            
+            /* 显示汉堡菜单，隐藏桌面导航 */
+            .hamburger {
+                display: flex;
+            }
+            .nav-menu {
+                display: none;
+            }
+            .lang-switch {
+                display: none;
+            }
+            
+            .about-content { 
+                flex-direction: column; 
+                gap: 2rem; 
+                padding: 2.5rem 2rem; 
+            }
+            .about-image {
+                width: 200px;
+                height: 200px;
+                font-size: 1.2rem;
+            }
+            .company-info { 
+                flex-direction: column; 
+                gap: 1.5rem;
+            }
+            .section { 
+                padding: 4rem 1.5rem 2.5rem 1.5rem; 
+            }
+            .project-flex { 
+                flex-direction: column; 
+                gap: 32px;
+            }
+            .project-images { 
+                margin: auto; 
+                max-width: 100%;
+                min-width: 280px;
+            }
+            .project-single-image { 
+                min-width: 280px; 
+                max-width: 100%; 
+            }
+            .project-single-image img { 
+                max-width: 100%; 
+                padding: 15px;
+            }
+            .hero-section {
+                height: 60vh;
+                padding-top: 120px;
+            }
+            .hero-title {
+                font-size: 2.8rem;
+                letter-spacing: 2px;
+            }
+            .hero-subtitle {
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+                padding: 0 1rem;
+            }
+            .section-title {
+                font-size: 2.2rem;
+                letter-spacing: 1px;
+            }
+        }
+
+        /* 移动端优化 - 小屏手机 */
         @media (max-width: 600px) {
-            .hero-title { font-size: 2.1rem; }
-            .hero-subtitle { font-size: 1rem; }
-            .section-title { font-size: 1.55rem;}
-            .product-title { font-size: 1.08rem;}
-            .products-grid { gap: 1.1rem;}
-            .project-title { font-size: 1.35rem;}
-            .project-subtitle { font-size: 1rem;}
-            .project-images { gap: 10px; }
+            .nav-container {
+                padding: 0 1rem;
+            }
+            .navbar {
+                padding: 1rem 0;
+            }
+            .logo {
+                font-size: 1.4rem;
+                letter-spacing: 1px;
+            }
+            .logo-image {
+                height: 48px;
+                width: 48px;
+            }
+            
+            .hero-section {
+                height: 55vh;
+                padding-top: 100px;
+            }
+            .hero-title { 
+                font-size: 2.2rem; 
+                letter-spacing: 1px;
+                margin-bottom: 1rem;
+            }
+            .hero-subtitle { 
+                font-size: 1.1rem; 
+                letter-spacing: 0.5px;
+                margin-bottom: 2rem;
+                line-height: 1.6;
+            }
+            .hero-cta {
+                font-size: 1rem;
+                padding: 0.9rem 2.2rem;
+            }
+            
+            .section { 
+                padding: 3rem 1rem 2rem 1rem; 
+            }
+            .section-title { 
+                font-size: 1.8rem;
+                letter-spacing: 0.5px;
+                margin-bottom: 2rem;
+            }
+            
+            .about-content {
+                padding: 2rem 1.5rem;
+                gap: 1.5rem;
+            }
+            .about-image {
+                width: 160px;
+                height: 160px;
+                font-size: 1rem;
+            }
+            .about-text {
+                font-size: 1rem;
+                line-height: 1.8;
+            }
+            
+            .project-title { 
+                font-size: 1.6rem;
+                margin-bottom: 1rem;
+                letter-spacing: 0.5px;
+            }
+            .project-subtitle { 
+                font-size: 1.1rem;
+                margin-bottom: 1.2rem;
+            }
+            .project-text ul {
+                font-size: 1rem;
+                line-height: 1.9;
+            }
+            .project-text ul li { 
+                margin-bottom: 8px; 
+            }
+            .project-images { 
+                gap: 15px;
+                min-width: 250px;
+            }
+            .project-single-image img {
+                padding: 10px;
+            }
+            
+            .products-grid { 
+                gap: 1.5rem;
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            .product-title { 
+                font-size: 1.2rem;
+            }
+            .product-desc {
+                font-size: 0.95rem;
+            }
+            
+            .footer {
+                padding: 2.5rem 0 1rem 0;
+            }
+            .footer-container {
+                padding: 0 1rem;
+            }
+            .footer-title {
+                font-size: 1.1rem;
+            }
+            .footer-info {
+                font-size: 0.9rem;
+                line-height: 1.8;
+            }
+            .footer-copy {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .hero-section {
+                height: 50vh;
+                padding-top: 90px;
+            }
+            .hero-title { 
+                font-size: 1.8rem; 
+            }
+            .hero-subtitle { 
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+            
+            .section { 
+                padding: 2.5rem 0.8rem 1.5rem 0.8rem; 
+            }
+            .section-title { 
+                font-size: 1.5rem;
+            }
+            
+            .about-content {
+                padding: 1.5rem 1rem;
+            }
+            .about-image {
+                width: 140px;
+                height: 140px;
+                font-size: 0.9rem;
+            }
+            
+            .project-title { 
+                font-size: 1.4rem;
+            }
+            .project-images { 
+                min-width: 220px;
+            }
+            
+            .mobile-menu .nav-link {
+                font-size: 1.3rem;
+                margin: 0.8rem 0;
+            }
+        }
+
+        /* 触摸优化 */
+        @media (hover: none) {
+            .product-card:hover {
+                transform: none;
+            }
+            .nav-link:hover {
+                background: rgba(255,255,255,0.1);
+            }
+        }
+
+        /* 横屏优化 */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .hero-section {
+                height: 80vh;
+                padding-top: 100px;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -420,8 +736,25 @@
                 <li><a href="#contact" class="nav-link">联系我们</a></li>
             </ul>
             <button class="lang-switch" onclick="toggleLanguage()">中/EN</button>
+            
+            <!-- 汉堡菜单按钮 -->
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
+
+    <!-- 移动端菜单 -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" class="nav-link" onclick="closeMobileMenu()">首页</a>
+        <a href="#products" class="nav-link" onclick="closeMobileMenu()">产品方案</a>
+        <a href="#about" class="nav-link" onclick="closeMobileMenu()">关于我们</a>
+        <!-- <a href="#products" class="nav-link" onclick="closeMobileMenu()">项目介绍</a> -->
+        <a href="#contact" class="nav-link" onclick="closeMobileMenu()">联系我们</a>
+        <button class="mobile-lang-switch" onclick="toggleLanguage()">中/EN</button>
+    </div>
 
     <!-- Hero Banner -->
     <section class="hero-section" id="home">
@@ -502,7 +835,7 @@
             <ul>
                为知名教育硬件品牌定制 AI 点读笔，
                将杰理 AC690x 芯片与教育内容数据库深度耦合，
-               开发 “实时语音翻译 + 生字笔顺动态演示” 功能，
+               开发 "实时语音翻译 + 生字笔顺动态演示" 功能，
                支持离线识别 10 万 + 中小学教材知识点，
                内容更新响应速度 < 24 小时，
                家长管控端（APP）用户满意度达 96%，
@@ -531,7 +864,7 @@
             <ul>
                曾为国内头部运动品牌定制运动手环方案，
                基于杰理 AC692x 芯片优化多传感器（心率、血氧、运动轨迹）同步算法，
-               攻克 “高采样率与低功耗” 矛盾痛点，
+               攻克 "高采样率与低功耗" 矛盾痛点，
                最终实现设备续航提升 30%（达 14 天），
                健康数据采集精度误差 < 2%，
                该产品上市后 6 个月内出货量突破 500 万台，
@@ -557,9 +890,9 @@
                 智能 · 创新 · 可靠
             </div>
             <div class="about-text">
-                自 2017 年起，深圳市晶虹创新科技有限公司便以嵌入式软件开发为核心赛道深耕不辍，与杰理科技原厂紧密联系，构建起 “原理架构设计 - 硬件原型实现 - 软件核心突破” 的全链路技术闭环。我们依托杰理芯片平台的底层优势，在驱动开发、协议栈定制、低功耗算法迭代等关键环节持续突破，形成从技术预研到量产落地的端到端服务能力。<br>
+                自 2017 年起，深圳市晶虹创新科技有限公司便以嵌入式软件开发为核心赛道深耕不辍，与杰理科技原厂紧密联系，构建起 "原理架构设计 - 硬件原型实现 - 软件核心突破" 的全链路技术闭环。我们依托杰理芯片平台的底层优势，在驱动开发、协议栈定制、低功耗算法迭代等关键环节持续突破，形成从技术预研到量产落地的端到端服务能力。<br>
                 在智能硬件领域，我们聚焦场景化技术创新：针对智能穿戴设备，攻克多传感器数据同步、超低功耗续航等技术痛点，实现健康数据精准采集与长效设备运行；在蓝牙手表方案中，优化 BLE 5.3 协议栈兼容性，结合 UI 交互定制化开发，打造流畅且具备差异化的用户体验；面向 AI 对话类产品，通过端侧 AI 模型轻量化部署、远场语音降噪算法优化，让设备具备快速唤醒、精准识别的智能交互能力；在儿童教育类产品方案中，将教育内容与嵌入式系统深度耦合，开发出支持多模态交互、内容安全管控的定制化方案，为儿童智能教育硬件提供稳定可靠的技术底座。<br>
-                多年来，我们始终以 “打造极致产品” 为目标，凭借对杰理方案的深度理解与嵌入式技术的持续迭代，已成为智能穿戴、蓝牙终端、AI交互、儿童教育等领域客户的核心技术合作伙伴，助力客户快速抢占市场先机，定义智能硬件的体验新标杆。
+                多年来，我们始终以 "打造极致产品" 为目标，凭借对杰理方案的深度理解与嵌入式技术的持续迭代，已成为智能穿戴、蓝牙终端、AI交互、儿童教育等领域客户的核心技术合作伙伴，助力客户快速抢占市场先机，定义智能硬件的体验新标杆。
                 <!-- <div class="company-info">
                     <div class="info-item">
                         <span class="info-label">成立时间：</span>
@@ -606,6 +939,31 @@
     </footer>
 
     <script>
+        // 汉堡菜单功能
+        function toggleMobileMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            
+            // 防止背景滚动
+            if (mobileMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         // 智能穿戴设备点击切换功能
         let currentIndex = 0;
         const images = [
@@ -626,7 +984,9 @@
         function toggleLanguage() {
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
             alert('国际化内容开发中');
+            closeMobileMenu(); // 切换语言后关闭移动菜单
         }
+        
         // // 导航滚动吸顶颜色过渡
         // window.addEventListener('scroll', () => {
         //     const navbar = document.querySelector('.navbar');
@@ -636,6 +996,7 @@
         //         navbar.style.background = "#187fff";
         //     }
         // });
+        
         // 平滑滚动
         document.querySelectorAll('a.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -645,6 +1006,30 @@
                     if(target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
                 }
             });
+        });
+
+        // 处理窗口大小变化
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const hamburger = document.querySelector('.hamburger');
+                
+                mobileMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // 点击菜单外部关闭菜单
+        document.addEventListener('click', function(e) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (mobileMenu.classList.contains('active') && 
+                !hamburger.contains(e.target) && 
+                !mobileMenu.contains(e.target)) {
+                closeMobileMenu();
+            }
         });
     </script>
 </body>
