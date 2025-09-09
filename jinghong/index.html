@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="logo-16x16.png">
     <meta name="description" content="深圳市晶虹创新科技有限公司，专注于智能穿戴、物联网及硬件方案整体开发，提供高品质智能终端及一体化定制解决方案。">
     <meta name="keywords" content="晶虹创新,智能穿戴,物联网,硬件方案,IoT,主板开发,智能终端,深圳科技公司">
-<!--     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet"> -->
     <style>
         :root {
             --main-blue: #187fff;
@@ -29,12 +29,12 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: var(--main-blue);
+            background: #000e7b;
             color: #fff;
             box-shadow: 0 2px 20px rgba(24,127,255,0.12);
             z-index: 1000;
             padding: 1.2rem 0;
-            transition: background 0.3s;
+            transition: none;
         }
         .nav-container {
             max-width: 1400px;
@@ -415,8 +415,8 @@
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">首页</a></li>
                 <li><a href="#about" class="nav-link">关于我们</a></li>
-                <li><a href="#ac79" class="nav-link">项目介绍</a></li>
                 <li><a href="#products" class="nav-link">产品方案</a></li>
+                <!-- <li><a href="#products" class="nav-link">项目介绍</a></li> -->
                 <li><a href="#contact" class="nav-link">联系我们</a></li>
             </ul>
             <button class="lang-switch" onclick="toggleLanguage()">中/EN</button>
@@ -441,10 +441,10 @@
                 智能 · 创新 · 可靠
             </div>
             <div class="about-text">
-                深圳市晶虹创新科技有限公司是一家专注于智能穿戴、物联网和智能硬件整体方案开发的创新型科技企业。我们拥有自研服务器及APP平台，提供从主板设计、硬件生产到软件系统和数据平台一体化的解决方案。<br>
-                <br>
-                公司始终以"科技赋能，智联未来"为核心理念，服务于全球智能终端客户，致力于推动产业智能化升级。
-                <div class="company-info">
+                自 2017 年起，深圳市晶虹创新科技有限公司便以嵌入式软件开发为核心赛道深耕不辍，与杰理科技原厂紧密联系，构建起 “原理架构设计 - 硬件原型实现 - 软件核心突破” 的全链路技术闭环。我们依托杰理芯片平台的底层优势，在驱动开发、协议栈定制、低功耗算法迭代等关键环节持续突破，形成从技术预研到量产落地的端到端服务能力。<br>
+                在智能硬件领域，我们聚焦场景化技术创新：针对智能穿戴设备，攻克多传感器数据同步、超低功耗续航等技术痛点，实现健康数据精准采集与长效设备运行；在蓝牙手表方案中，优化 BLE 5.3 协议栈兼容性，结合 UI 交互定制化开发，打造流畅且具备差异化的用户体验；面向 AI 对话类产品，通过端侧 AI 模型轻量化部署、远场语音降噪算法优化，让设备具备快速唤醒、精准识别的智能交互能力；在儿童教育类产品方案中，将教育内容与嵌入式系统深度耦合，开发出支持多模态交互、内容安全管控的定制化方案，为儿童智能教育硬件提供稳定可靠的技术底座。<br>
+                多年来，我们始终以 “打造极致产品” 为目标，凭借对杰理方案的深度理解与嵌入式技术的持续迭代，已成为智能穿戴、蓝牙终端、AI交互、儿童教育等领域客户的核心技术合作伙伴，助力客户快速抢占市场先机，定义智能硬件的体验新标杆。
+                <!-- <div class="company-info">
                     <div class="info-item">
                         <span class="info-label">成立时间：</span>
                         <span class="info-content">2017年</span>
@@ -453,95 +453,127 @@
                         <span class="info-label">公司地址：</span>
                         <span class="info-content">深圳市</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
 
-    <!-- AC791N项目介绍区块 START -->
-    <section id="ac79" class="section">
+    <!-- 蓝牙手表项目介绍区块 START -->
+    <section id="products" class="section">
         <div class="project-flex">
             <!-- 左侧文本部分 -->
             <div class="project-text">
-            <div class="project-title">杰理AC791N项目介绍</div>
-            <div class="project-subtitle">杰理AC791N SoC 芯片支持以下特性</div>
+            <div class="project-title">蓝牙手表方案</div>
+            <div class="project-subtitle"></div>
             <ul>
-                <li>· WI-FI+经典蓝牙2.1+蓝牙BLE5.0三模共存</li>
-                <li>· 轻量级的AI神经网络</li>
-                <li>· 主频高达320MHz的双核浮点DSP处理器，片上集成了共578K字节SRAM，部分封装支持2/8M字节SDRAM</li>
-                <li>· 支持DVP/BT656图像传感器，最大支持720P分辨率</li>
-                <li>· 支持ADC、DAC、LINEIN、IIS、PDM、SPDIF音频接口，多种音效处理，双麦克风打断唤醒</li>
-                <li>· 支持RGB888(8bit)/RGB666(6bit)等多种推屏接口，可达320*240@30fps</li>
+               为某儿童智能硬件厂商开发 4G 儿童电话手表，
+               基于杰理 AD695x 芯片优化射频性能与定位算法，
+               解决复杂环境下（室内、高楼区）定位漂移问题，
+               将定位误差缩小至 < 5 米，
+               同时通过软件层面的通话降噪优化，
+               使儿童与家长的通话清晰度提升 40%，
+               该方案支撑客户产品占据国内儿童电话手表市场 15% 的份额。
             </ul>
             <div class="project-scenes">
-                <b>应用场景：</b>语音打断唤醒，低功耗人脸检测
+                <!-- <b>应用场景：</b>语音打断唤醒，低功耗人脸检测 -->
             </div>
             </div>
             <!-- 右侧单张大图 -->
             <div class="project-single-image">
-              <img src="./static/image1.png" alt="AC791N应用产品展示">
+              <img src="./static/AIchat.png" alt="蓝牙手表方案产品展示">
             </div>
         </div>
     </section>
-    <!-- AC791N项目介绍区块 END -->
+    <!-- 蓝牙手表方案项目介绍区块 END -->
 
-    <!-- AC792N项目介绍区块 START -->
-    <section id="ac792" class="section">
-      <div class="project-flex">
-        <!-- 左侧文本部分 -->
-        <div class="project-text">
-          <div class="project-title">杰理AC792N项目介绍</div>
-          <div class="project-subtitle">杰理AC792N SoC 芯片支持以下特性</div>
-          <ul>
-            <li>· WiFi 802.11b/g/n</li>
-            <li>· 蓝牙双模 （支持蓝牙EDR、蓝牙BLE5.2）</li>
-            <li>· 主频高达320MHz的双核浮点DSP处理器，片上集成了共578K字节SRAM，部分封装支持2/8M字节SDRAM</li>
-            <li>· 支持DVP/BT656图像传感器，最大支持720P分辨率</li>
-            <li>· 支持ADC、DAC、LINEIN、IIS、PDM、SPDIF音频接口，多种音效处理，双麦克风打断唤醒</li>
-            <li>· 支持RGB888(8bit)/RGB666(6bit)等多种推屏接口，可达320*240@30fps</li>
-          </ul>
-          <div class="project-scenes">
-            <b>应用场景：</b>AI对话类、儿童绘本故事机、点读笔/扫描笔/翻译笔、WiFi蓝牙智能音响、WiFi摄像头玩具、可录像拍照宠物自动喂养器
-          </div>
+     <!-- AI对话类产品项目介绍区块 START -->
+    <section id="ac79" class="section">
+        <div class="project-flex">
+            <!-- 左侧文本部分 -->
+            <div class="project-text">
+            <div class="project-title">AI对话类产品方案</div>
+            <div class="project-subtitle"></div>
+            <ul>
+               与消费电子企业合作开发智能早教机器人，
+               基于杰理 AC791x 芯片实现端侧 AI 模型
+               （语音唤醒、语义识别）轻量化部署，
+               通过自研远场降噪算法，
+               在家庭嘈杂环境下
+               （60dB 噪音）唤醒率仍达 98%，误唤醒率 < 0.1 次 / 天，该产品年量产规模超 200 万台，
+               获京东、天猫儿童智能设备品类 TOP3。
+            </ul>
+            <div class="project-scenes">
+                <!-- <b>应用场景：</b>语音打断唤醒，低功耗人脸检测 -->
+            </div>
+            </div>
+            <!-- 右侧单张大图 -->
+            <div class="project-single-image">
+              <img src="./static/AICHAT2.png" alt="AI对话类产品展示">
+            </div>
         </div>
-        <!-- 右侧单张大图 -->
-        <div class="project-single-image">
-          <img src="./static/image2.png" alt="AC792N应用产品展示">
-        </div>
-      </div>
     </section>
-    <!-- AC792N项目介绍区块 END -->
+    <!-- AI对话类产品项目介绍区块 END -->
 
-    <!-- AC70项目介绍区块 START -->
-    <section id="ac70" class="section">
-      <div class="project-flex">
-        <!-- 左侧文本部分 -->
-        <div class="project-text">
-          <div class="project-title">杰理AC70项目介绍</div>
-          <div class="project-subtitle">杰理AC70 SoC 芯片支持以下特性</div>
-          <ul>
-            <li>· 支持蓝牙5.3双模（BR/EDR/BLE）</li>
-            <li>· 支持混合主动降噪（Hybrid ANC）和ENC通话降噪，可配置为单麦/双麦/三麦方案，噪底低至4.5μVrms‌</li>
-            <li>· 集成杰理第三代自研音效算法，支持空间音频、骨传导等功能‌</li>
-          </ul>
-          <div class="project-scenes">
-            <b>应用场景：</b>蓝牙手表、蓝牙音箱
-          </div>
+
+      <!-- 儿童教育类产品项目介绍区块 START -->
+    <section id="ac79" class="section">
+        <div class="project-flex">
+            <!-- 左侧文本部分 -->
+            <div class="project-text">
+            <div class="project-title">儿童教育类产品方案</div>
+            <div class="project-subtitle"></div>
+            <ul>
+               为知名教育硬件品牌定制 AI 点读笔，
+               将杰理 AC690x 芯片与教育内容数据库深度耦合，
+               开发 “实时语音翻译 + 生字笔顺动态演示” 功能，
+               支持离线识别 10 万 + 中小学教材知识点，
+               内容更新响应速度 < 24 小时，
+               家长管控端（APP）用户满意度达 96%，
+               该方案帮助客户实现产品毛利率提升 12%。
+            </ul>
+            <div class="project-scenes">
+                <!-- <b>应用场景：</b>语音打断唤醒，低功耗人脸检测 -->
+            </div>
+            </div>
+            <!-- 右侧单张大图 -->
+            <div class="project-single-image">
+              <img src="./static/AIchat.png" alt="儿童教育类产品展示">
+            </div>
         </div>
-        <!-- 右侧单张大图 -->
-        <div class="project-single-image">
-          <img src="./static/image2.png" alt="AC792N应用产品展示">
-        </div>
-      </div>
     </section>
-    <!-- AC70N项目介绍区块 END -->
+    <!-- 儿童教育类产品项目介绍区块 END -->
+
+
+     <!-- 智能穿戴领域产品项目介绍区块 START -->
+    <section id="ac79" class="section">
+        <div class="project-flex">
+            <!-- 左侧文本部分 -->
+            <div class="project-text">
+            <div class="project-title">智能穿戴领域产品方案</div>
+            <div class="project-subtitle"></div>
+            <ul>
+               曾为国内头部运动品牌定制运动手环方案，
+               基于杰理 AC692x 芯片优化多传感器（心率、血氧、运动轨迹）同步算法，
+               攻克 “高采样率与低功耗” 矛盾痛点，
+               最终实现设备续航提升 30%（达 14 天），
+               健康数据采集精度误差 < 2%，
+               该产品上市后 6 个月内出货量突破 500 万台，
+               成为细分市场爆款。
+            </ul>
+            <div class="project-scenes">
+                <!-- <b>应用场景：</b>语音打断唤醒，低功耗人脸检测 -->
+            </div>
+            </div>
+            <!-- 右侧单张大图 -->
+            <div class="project-single-image">
+            <img id="bluetoothWatchImage" src="./static/watch1.png" alt="蓝牙手表方案产品展示" onclick="toggleWearableImage()">
+        </div>
+        </div>
+    </section>
+    <!-- 智能穿戴领域产品项目介绍区块 END -->
 
 
 
-
-
-
-    
 
     <!-- 联系我们&footer -->
     <section id="contact" class="section" style="padding-bottom:0;">
@@ -552,9 +584,9 @@
             </div>
             <div class="about-text">
                 <div class="company-info" style="margin-top:1rem;">
-                    <div class="info-item"><span class="info-label">联系电话：</span> <span class="info-content"></span></div>
-                    <div class="info-item"><span class="info-label">企业邮箱：</span> <span class="info-content"></span></div>
-                    <div class="info-item"><span class="info-label">公司官网：</span> <span class="info-content">www..com</span></div>
+                    <!-- <div class="info-item"><span class="info-label">联系电话：</span> <span class="info-content"></span></div> -->
+                    <div class="info-item"><span class="info-label">企业邮箱：</span> <span class="info-content">marketjhcx@163.com </span></div>
+                    <div class="info-item"><span class="info-label">公司官网：</span> <span class="info-content">www.3cbay.com</span></div>
                 </div>
             </div>
         </div>
@@ -565,8 +597,8 @@
         <div class="footer-container">
             <div class="footer-title">深圳市晶虹创新科技有限公司</div>
             <div class="footer-info">
-                地址：深圳市<br>
-                电话&nbsp;&nbsp;|&nbsp;&nbsp;邮箱：<br>
+                地址：广东省深圳市龙岗区联创科技园3期31栋 联创科技大厦1805<br>
+                <!-- 电话&nbsp;&nbsp;|&nbsp;&nbsp;邮箱：<br> -->
                 Copyright &copy; 2025 深圳市晶虹创新科技有限公司 保留所有权利
             </div>
             <div class="footer-copy">科技赋能 · 创新引领 · 诚信服务</div>
@@ -574,21 +606,36 @@
     </footer>
 
     <script>
+        // 智能穿戴设备点击切换功能
+        let currentIndex = 0;
+        const images = [
+        './static/watch1.png',
+        './static/watch2.png'
+        ];
+
+        function toggleWearableImage() {
+        const imageElement = document.getElementById('bluetoothWatchImage');
+        // 下一个索引 (循环)
+        currentIndex = (currentIndex + 1) % images.length;
+        imageElement.src = images[currentIndex];}
+
+
+
         // 语言切换基础实现
         let currentLang = 'zh';
         function toggleLanguage() {
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
             alert('国际化内容开发中');
         }
-        // 导航滚动吸顶颜色过渡
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 80) {
-                navbar.style.background = "#0e57b4";
-            } else {
-                navbar.style.background = "#187fff";
-            }
-        });
+        // // 导航滚动吸顶颜色过渡
+        // window.addEventListener('scroll', () => {
+        //     const navbar = document.querySelector('.navbar');
+        //     if (window.scrollY > 80) {
+        //         navbar.style.background = "#0e57b4";
+        //     } else {
+        //         navbar.style.background = "#187fff";
+        //     }
+        // });
         // 平滑滚动
         document.querySelectorAll('a.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -601,6 +648,4 @@
         });
     </script>
 </body>
-
 </html>
-
