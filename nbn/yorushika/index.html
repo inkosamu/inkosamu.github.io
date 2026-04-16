@@ -1,128 +1,201 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>YorushikaTI</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #0f1c2e;
-      color: #fff;
-    }
-    .card {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #1c2b3a;
-      border-radius: 12px;
-    }
-    input, textarea {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: none;
-      background: #7dd3fc;
-      cursor: pointer;
-    }
-    .comment {
-      border-bottom: 1px solid #444;
-      padding: 6px 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YorushikaTI</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+.container {
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* 卡片 */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+}
+
+/* 标题 */
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* 按钮 */
+button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+/* 输入框 */
+input, textarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus, textarea:focus {
+  border-color: #2563eb;
+}
+
+/* 留言区 */
+.comment-box {
+  margin-top: 20px;
+}
+
+.comment-item {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+  margin-bottom: 10px;
+}
+
+.comment-name {
+  font-weight: 600;
+  color: #1e3a8a;
+  font-size: 14px;
+}
+
+.comment-text {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* 分割线 */
+.divider {
+  margin: 20px 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
-  <h2>《ただ君に晴れ》</h2>
+<div class="container">
+  <div class="card">
 
-  <h3>留言</h3>
-  <input id="name" placeholder="名字">
-  <textarea id="msg" placeholder="留言"></textarea>
-  <button onclick="addComment()">提交留言</button>
+    <div class="title">《ただ君に晴れ》</div>
+    <div class="subtitle">夏が終わる前に</div>
 
-  <div id="comments"></div>
+    <button onclick="generateCard()">生成分享卡片</button>
+
+    <div class="divider"></div>
+
+    <h3>留言</h3>
+
+    <input id="name" placeholder="你的名字">
+    <textarea id="msg" placeholder="写点什么..." rows="3"></textarea>
+    <button onclick="addComment()">提交留言</button>
+
+    <div id="comments" class="comment-box"></div>
+
+  </div>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, orderBy } 
-    from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } 
+from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
-  // ===== Firebase 配置 =====
-  const firebaseConfig = {
-    apiKey: "AIzaSyAq3fTUZvUscSi0V5I49TFL9SOLB5e1BfI",
-    authDomain: "yorushika-comment.firebaseapp.com",
-    projectId: "yorushika-comment",
-    storageBucket: "yorushika-comment.firebasestorage.app",
-    messagingSenderId: "424982794250",
-    appId: "1:424982794250:web:64f52fdd4226cca00dcff3"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAq3fTUZvUscSi0V5I49TFL9SOLB5e1BfI",
+  authDomain: "yorushika-comment.firebaseapp.com",
+  projectId: "yorushika-comment",
+  storageBucket: "yorushika-comment.firebasestorage.app",
+  messagingSenderId: "424982794250",
+  appId: "1:424982794250:web:64f52fdd4226cca00dcff3"
+};
 
-  // 初始化
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  // ===== 提交留言 =====
-  window.addComment = async function () {
-    const name = document.getElementById("name").value.trim();
-    const msg = document.getElementById("msg").value.trim();
+/* ===== 提交留言 ===== */
+window.addComment = async function () {
+  const name = document.getElementById("name").value.trim();
+  const msg = document.getElementById("msg").value.trim();
 
-    if (!name || !msg) {
-      alert("请填写完整");
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, "comments"), {
-        name,
-        msg,
-        time: Date.now()
-      });
-
-      alert("留言成功");
-
-      document.getElementById("name").value = "";
-      document.getElementById("msg").value = "";
-
-      loadComments();
-    } catch (err) {
-      alert("失败：" + err.message);
-      console.error(err);
-    }
+  if (!name || !msg) {
+    alert("请填写完整");
+    return;
   }
 
-  // ===== 加载留言 =====
-  async function loadComments() {
-    const box = document.getElementById("comments");
+  await addDoc(collection(db, "comments"), {
+    name,
+    msg,
+    time: Date.now()
+  });
 
-    try {
-      const q = query(collection(db, "comments"), orderBy("time", "desc"));
-      const snap = await getDocs(q);
+  document.getElementById("name").value = "";
+  document.getElementById("msg").value = "";
 
-      if (snap.empty) {
-        box.innerHTML = "还没有留言";
-        return;
-      }
-
-      box.innerHTML = snap.docs.map(doc => {
-        const c = doc.data();
-        return `<div class="comment">${c.name} - ${c.msg}</div>`;
-      }).join("");
-    } catch (err) {
-      box.innerHTML = "加载失败：" + err.message;
-    }
-  }
-
-  // 初始化加载
   loadComments();
+};
+
+/* ===== 加载留言 ===== */
+async function loadComments() {
+  const box = document.getElementById("comments");
+
+  const q = query(collection(db, "comments"), orderBy("time", "desc"));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    box.innerHTML = "<div class='comment-item'>还没有留言</div>";
+    return;
+  }
+
+  box.innerHTML = snap.docs.map(doc => {
+    const c = doc.data();
+    return `
+      <div class="comment-item">
+        <div class="comment-name">${c.name}</div>
+        <div class="comment-text">${c.msg}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+loadComments();
+
+/* ===== 分享卡片（占位） ===== */
+window.generateCard = function () {
+  alert("下一步可以帮你做高级分享卡片");
+};
 </script>
 
 </body>
