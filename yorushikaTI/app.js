@@ -1,7 +1,7 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
 import {
-  getFirestore,
+  initializeFirestore,
+  memoryLocalCache,
   collection,
   addDoc,
   getDocs,
@@ -19,7 +19,11 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
+const db = initializeFirestore(fbApp, {
+  localCache: memoryLocalCache(),
+  experimentalForceLongPolling: true,
+  useFetchStreams: false
+});
 
 let DATA = null;
 
@@ -40,6 +44,14 @@ function escapeHtml(str) {
     '"': "&quot;",
     "'": "&#39;"
   }[s]));
+}
+
+function withTimeout(promise, ms, message) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(message)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
 async function loadData() {
@@ -330,25 +342,52 @@ async function addComment() {
     return;
   }
 
-  await addDoc(collection(db, "comments"), {
-    name,
-    msg,
-    result: state.result?.name || "",
-    time: Date.now()
-  });
+  const submitBtn = document.getElementById("commentSubmitBtn");
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "提交中…";
+  }
 
-  nameEl.value = "";
-  msgEl.value = "";
-  await loadComments();
+  try {
+    await withTimeout(
+      addDoc(collection(db, "comments"), {
+        name,
+        msg,
+        result: state.result?.name || "",
+        time: Date.now()
+      }),
+      15000,
+      "提交超时，请检查网络后重试。"
+    );
+
+    nameEl.value = "";
+    msgEl.value = "";
+    await loadComments();
+    alert("留言成功。");
+  } catch (err) {
+    console.error("addComment failed:", err);
+    alert(`留言失败：${err?.message || err}`);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "提交留言";
+    }
+  }
 }
 
 async function loadComments() {
   const box = document.getElementById("comments");
   if (!box) return;
 
+  box.innerHTML = `<div class="comment-empty">留言加载中…</div>`;
+
   try {
     const q = query(collection(db, "comments"), orderBy("time", "desc"));
-    const snap = await getDocs(q);
+    const snap = await withTimeout(
+      getDocs(q),
+      15000,
+      "加载超时，请检查网络后刷新页面。"
+    );
 
     if (snap.empty) {
       box.innerHTML = `<div class="comment-empty">还没有留言，来写第一条吧。</div>`;
@@ -368,7 +407,8 @@ async function loadComments() {
       `;
     }).join("");
   } catch (err) {
-    box.innerHTML = `<div class="comment-empty">留言加载失败：${escapeHtml(err.message)}</div>`;
+    console.error("loadComments failed:", err);
+    box.innerHTML = `<div class="comment-empty">留言加载失败：${escapeHtml(err?.message || String(err))}</div>`;
   }
 }
 
