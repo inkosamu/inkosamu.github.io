@@ -234,7 +234,7 @@ function renderResult() {
             <div class="comment-empty">留言加载中…</div>
           </div>
 
-          <div class="footer-note">评论会保存到 Firebase 的 comments 集合。</div>
+          <div class="footer-note">评论会保存到数据库，有任何问题和2194635742@qq.com反馈。</div>
         </section>
       </section>
     </div>
