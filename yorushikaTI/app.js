@@ -246,7 +246,7 @@ function renderResult() {
             <div class="comment-empty">留言加载中…</div>
           </div>
 
-          <div class="footer-note">评论会保存到数据库，有任何问题和2194635742@qq.com反馈。</div>
+          <div class="footer-note">评论会保存到数据库，有任何问题和2194635742@qq.com反馈，非常抱歉，由于数据库部署原因，当前移动端留言需要打开科学上网。</div>
         </section>
       </section>
     </div>
@@ -299,7 +299,7 @@ function bindEvents() {
     document.getElementById("nextBtn")?.addEventListener("click", () => {
       const selected = state.answers[state.currentIndex];
       if (selected == null) {
-        alert("先选一个答案。");
+        alert("不选答案就点下一题会被章鱼吃掉。");
         return;
       }
 
@@ -386,7 +386,7 @@ async function loadComments() {
     const snap = await withTimeout(
       getDocs(q),
       15000,
-      "加载超时，请检查网络后刷新页面。"
+      "加载超时，请检查网络后刷新页面，可能需要科学上网。"
     );
 
     if (snap.empty) {
