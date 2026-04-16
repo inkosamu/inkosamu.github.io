@@ -19,113 +19,53 @@ body {
   padding: 0 16px;
 }
 
-/* 卡片 */
 .card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.06);
 }
 
-/* 标题 */
 .title {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   color: #1e3a8a;
-  margin-bottom: 6px;
 }
 
-.subtitle {
-  color: #6b7280;
-  margin-bottom: 20px;
-}
-
-/* 按钮 */
 button {
   background: #2563eb;
   color: #fff;
   border: none;
-  padding: 10px 18px;
+  padding: 10px 16px;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
+  margin-top: 10px;
 }
 
 button:hover {
   background: #1e40af;
 }
 
-/* 输入框 */
 input, textarea {
   width: 100%;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px;
   margin-top: 10px;
-  font-size: 14px;
-  outline: none;
-  transition: 0.2s;
-}
-
-input:focus, textarea:focus {
-  border-color: #2563eb;
-}
-
-/* 留言区 */
-.comment-box {
-  margin-top: 20px;
 }
 
 .comment-item {
-  padding: 12px;
-  border-radius: 10px;
   background: #f9fafb;
-  margin-bottom: 10px;
-}
-
-.comment-name {
-  font-weight: 600;
-  color: #1e3a8a;
-  font-size: 14px;
-}
-
-.comment-text {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #374151;
-}
-
-/* 分割线 */
-.divider {
-  margin: 20px 0;
-  height: 1px;
-  background: #e5e7eb;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-  <div class="card">
-
-    <div class="title">《ただ君に晴れ》</div>
-    <div class="subtitle">夏が終わる前に</div>
-
-    <button onclick="generateCard()">生成分享卡片</button>
-
-    <div class="divider"></div>
-
-    <h3>留言</h3>
-
-    <input id="name" placeholder="你的名字">
-    <textarea id="msg" placeholder="写点什么..." rows="3"></textarea>
-    <button onclick="addComment()">提交留言</button>
-
-    <div id="comments" class="comment-box"></div>
-
-  </div>
+  <div id="app" class="card"></div>
 </div>
 
 <script type="module">
@@ -137,23 +77,56 @@ const firebaseConfig = {
   apiKey: "AIzaSyAq3fTUZvUscSi0V5I49TFL9SOLB5e1BfI",
   authDomain: "yorushika-comment.firebaseapp.com",
   projectId: "yorushika-comment",
-  storageBucket: "yorushika-comment.firebasestorage.app",
-  messagingSenderId: "424982794250",
-  appId: "1:424982794250:web:64f52fdd4226cca00dcff3"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ===== 提交留言 ===== */
+/* ===== 简化题目 ===== */
+const questions = [
+  { text: "你是否经常怀念过去？" },
+  { text: "你是否喜欢独处？" },
+  { text: "你是否对未来感到迷茫？" }
+];
+
+let index = 0;
+
+/* ===== 渲染 ===== */
+function render() {
+  const appEl = document.getElementById("app");
+
+  if (index < questions.length) {
+    appEl.innerHTML = `
+      <div class="title">${questions[index].text}</div>
+      <button onclick="next()">是</button>
+      <button onclick="next()">不是</button>
+    `;
+  } else {
+    appEl.innerHTML = `
+      <div class="title">《ただ君に晴れ》</div>
+
+      <h3>留言</h3>
+      <input id="name" placeholder="名字">
+      <textarea id="msg" placeholder="留言"></textarea>
+      <button onclick="addComment()">提交</button>
+
+      <div id="comments"></div>
+    `;
+    loadComments();
+  }
+}
+
+window.next = function () {
+  index++;
+  render();
+};
+
+/* ===== 评论 ===== */
 window.addComment = async function () {
   const name = document.getElementById("name").value.trim();
   const msg = document.getElementById("msg").value.trim();
 
-  if (!name || !msg) {
-    alert("请填写完整");
-    return;
-  }
+  if (!name || !msg) return alert("填完整");
 
   await addDoc(collection(db, "comments"), {
     name,
@@ -161,41 +134,21 @@ window.addComment = async function () {
     time: Date.now()
   });
 
-  document.getElementById("name").value = "";
-  document.getElementById("msg").value = "";
-
   loadComments();
 };
 
-/* ===== 加载留言 ===== */
 async function loadComments() {
   const box = document.getElementById("comments");
-
   const q = query(collection(db, "comments"), orderBy("time", "desc"));
   const snap = await getDocs(q);
 
-  if (snap.empty) {
-    box.innerHTML = "<div class='comment-item'>还没有留言</div>";
-    return;
-  }
-
   box.innerHTML = snap.docs.map(doc => {
     const c = doc.data();
-    return `
-      <div class="comment-item">
-        <div class="comment-name">${c.name}</div>
-        <div class="comment-text">${c.msg}</div>
-      </div>
-    `;
+    return `<div class="comment-item">${c.name} - ${c.msg}</div>`;
   }).join("");
 }
 
-loadComments();
-
-/* ===== 分享卡片（占位） ===== */
-window.generateCard = function () {
-  alert("下一步可以帮你做高级分享卡片");
-};
+render();
 </script>
 
 </body>
