@@ -1,18 +1,129 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YorushikaTI</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>YorushikaTI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #0f1c2e;
+      color: #fff;
+    }
+    .card {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1c2b3a;
+      border-radius: 12px;
+    }
+    input, textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
+      background: #7dd3fc;
+      cursor: pointer;
+    }
+    .comment {
+      border-bottom: 1px solid #444;
+      padding: 6px 0;
+    }
+  </style>
 </head>
 <body>
-<div id="app"></div>
 
-<!-- Firebase SDK (for real comments) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<div class="card">
+  <h2>《ただ君に晴れ》</h2>
 
-<script src="app.js"></script>
+  <h3>留言</h3>
+  <input id="name" placeholder="名字">
+  <textarea id="msg" placeholder="留言"></textarea>
+  <button onclick="addComment()">提交留言</button>
+
+  <div id="comments"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy } 
+    from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+  // ===== Firebase 配置 =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyAq3fTUZvUscSi0V5I49TFL9SOLB5e1BfI",
+    authDomain: "yorushika-comment.firebaseapp.com",
+    projectId: "yorushika-comment",
+    storageBucket: "yorushika-comment.firebasestorage.app",
+    messagingSenderId: "424982794250",
+    appId: "1:424982794250:web:64f52fdd4226cca00dcff3"
+  };
+
+  // 初始化
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ===== 提交留言 =====
+  window.addComment = async function () {
+    const name = document.getElementById("name").value.trim();
+    const msg = document.getElementById("msg").value.trim();
+
+    if (!name || !msg) {
+      alert("请填写完整");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "comments"), {
+        name,
+        msg,
+        time: Date.now()
+      });
+
+      alert("留言成功");
+
+      document.getElementById("name").value = "";
+      document.getElementById("msg").value = "";
+
+      loadComments();
+    } catch (err) {
+      alert("失败：" + err.message);
+      console.error(err);
+    }
+  }
+
+  // ===== 加载留言 =====
+  async function loadComments() {
+    const box = document.getElementById("comments");
+
+    try {
+      const q = query(collection(db, "comments"), orderBy("time", "desc"));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        box.innerHTML = "还没有留言";
+        return;
+      }
+
+      box.innerHTML = snap.docs.map(doc => {
+        const c = doc.data();
+        return `<div class="comment">${c.name} - ${c.msg}</div>`;
+      }).join("");
+    } catch (err) {
+      box.innerHTML = "加载失败：" + err.message;
+    }
+  }
+
+  // 初始化加载
+  loadComments();
+</script>
+
 </body>
 </html>
