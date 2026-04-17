@@ -251,13 +251,13 @@ function renderResult() {
         <section class="comment-section">
           <div class="comment-head">
             <h3>留言区</h3>
-            <p>可以留下你的名字，以及你此刻最想说的一句短句。</p>
+            <p>可以留下你的名字，以及你此刻最想说的话，言って。</p>
           </div>
 
           <div class="comment-form">
             <input id="commentName" class="input" placeholder="你的名字" maxlength="30" />
-            <textarea id="commentMsg" class="textarea" placeholder="写点什么..." maxlength="300"></textarea>
-            <button class="btn btn-primary" id="commentSubmitBtn">提交留言</button>
+            <textarea id="commentMsg" class="textarea" placeholder="用月夜浸染..." maxlength="300"></textarea>
+            <button class="btn btn-primary" id="commentSubmitBtn">言って。</button>
           </div>
 
           <div id="comments" class="comments-list">
