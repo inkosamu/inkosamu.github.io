@@ -143,6 +143,11 @@ function renderStart() {
         <div class="actions-row">
           <button class="btn btn-primary" id="startBtn">开始测试</button>
         </div>
+
+        <div class="update-note">
+          最后更新：2026.04.17/修复留言重复提交bug，测试前增加评论区
+        </div>
+        
       </section>
     </div>
   `;
