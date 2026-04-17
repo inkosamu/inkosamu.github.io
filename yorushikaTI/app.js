@@ -36,6 +36,9 @@ const state = {
   resultMeta: null
 };
 
+let lastCommentFingerprint = "";
+let lastCommentTime = 0;
+
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, s => ({
     "&": "&amp;",
@@ -336,9 +339,21 @@ async function addComment() {
 
   const name = nameEl.value.trim();
   const msg = msgEl.value.trim();
+  const result = state.result?.name || "";
 
   if (!name || !msg) {
     alert("请填写完整。");
+    return;
+  }
+
+  const fingerprint = `${name}__${msg}__${result}`;
+  const now = Date.now();
+
+  if (
+    fingerprint === lastCommentFingerprint &&
+    now - lastCommentTime < 10000
+  ) {
+    alert("请不要在 10 秒内重复提交相同留言。");
     return;
   }
 
@@ -353,12 +368,15 @@ async function addComment() {
       addDoc(collection(db, "comments"), {
         name,
         msg,
-        result: state.result?.name || "",
-        time: Date.now()
+        result,
+        time: now
       }),
       15000,
       "提交超时，请检查网络后重试。"
     );
+
+    lastCommentFingerprint = fingerprint;
+    lastCommentTime = now;
 
     nameEl.value = "";
     msgEl.value = "";
