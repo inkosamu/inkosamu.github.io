@@ -145,7 +145,7 @@ function renderStart() {
         </div>
 
         <div class="update-note">
-          最后更新：2026.04.17/修复留言重复提交bug，测试前增加评论区
+          最后更新：2026.04.17/修复留言重复提交bug，测试前增加评论区 by inkOsamu
         </div>
         
       </section>
