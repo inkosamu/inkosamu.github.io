@@ -145,9 +145,19 @@ function renderStart() {
         </div>
 
         <div class="update-note">
-          最后更新：2026.04.17/修复留言重复提交bug，测试前增加评论区 by inkOsamu
+          最后更新：2026.04.17 / 修复留言重复提交 bug，测试前增加评论区 by inkOsamu
         </div>
-        
+
+        <section class="comment-preview-section">
+          <div class="comment-head">
+            <h3>最新评论</h3>
+            <p>先看看大家都测到了什么。</p>
+          </div>
+
+          <div id="startComments" class="comments-list">
+            <div class="comment-empty">留言加载中…</div>
+          </div>
+        </section>
       </section>
     </div>
   `;
@@ -275,8 +285,12 @@ function render() {
 
   bindEvents();
 
+  if (state.view === "start") {
+    loadComments("startComments");
+  }
+
   if (state.view === "result") {
-    loadComments();
+    loadComments("comments");
   }
 }
 
@@ -385,7 +399,7 @@ async function addComment() {
 
     nameEl.value = "";
     msgEl.value = "";
-    await loadComments();
+    await loadComments("comments");
     alert("留言成功。");
   } catch (err) {
     console.error("addComment failed:", err);
@@ -398,8 +412,8 @@ async function addComment() {
   }
 }
 
-async function loadComments() {
-  const box = document.getElementById("comments");
+async function loadComments(targetId = "comments") {
+  const box = document.getElementById(targetId);
   if (!box) return;
 
   box.innerHTML = `<div class="comment-empty">留言加载中…</div>`;
