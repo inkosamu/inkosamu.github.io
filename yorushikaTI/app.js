@@ -150,8 +150,8 @@ function renderStart() {
 
         <section class="comment-preview-section">
           <div class="comment-head">
-            <h3>最新评论</h3>
-            <p>先看看大家都测到了什么。</p>
+            <h3>最新留言</h3>
+            <p>先看看夜鹿厨们都测到了什么。记得挂魔法</p>
           </div>
 
           <div id="startComments" class="comments-list">
